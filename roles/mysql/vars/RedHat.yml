@@ -1,0 +1,7 @@
+---
+mysql_packages:
+  - mariadb-server
+  - python3-PyMySQL
+mysql_service_name: mariadb
+mysql_socket: /var/lib/mysql/mysql.sock
+mysql_config_path: /etc/my.cnf.d/wordpress.cnf

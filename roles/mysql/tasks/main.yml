@@ -1,0 +1,36 @@
+---
+- name: Load OS-specific MySQL variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install database server packages
+  ansible.builtin.package:
+    name: "{{ mysql_packages }}"
+    state: present
+
+- name: Configure database bind address
+  ansible.builtin.template:
+    src: my.cnf.j2
+    dest: "{{ mysql_config_path }}"
+    mode: "0644"
+  notify: Restart mysql
+
+- name: Enable and start database service
+  ansible.builtin.service:
+    name: "{{ mysql_service_name }}"
+    state: started
+    enabled: true
+
+- name: Create WordPress database
+  community.mysql.mysql_db:
+    name: "{{ mysql_database_name }}"
+    state: present
+    login_unix_socket: "{{ mysql_socket }}"
+
+- name: Create WordPress database user
+  community.mysql.mysql_user:
+    name: "{{ mysql_database_user }}"
+    password: "{{ mysql_database_password }}"
+    priv: "{{ mysql_database_name }}.*:ALL"
+    host: "{{ mysql_database_user_host }}"
+    state: present
+    login_unix_socket: "{{ mysql_socket }}"

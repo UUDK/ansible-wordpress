@@ -1,0 +1,10 @@
+---
+wordpress_db_host: db2
+wordpress_db_name: "{{ mysql_database_name }}"
+wordpress_db_user: "{{ mysql_database_user }}"
+wordpress_db_password: "{{ mysql_database_password }}"
+wordpress_site_url: "http://{{ inventory_hostname }}"
+wordpress_site_title: My WordPress Site
+wordpress_admin_user: admin
+wordpress_admin_password: change-me-now
+wordpress_admin_email: admin@example.com

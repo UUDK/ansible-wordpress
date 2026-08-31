@@ -1,0 +1,7 @@
+---
+mysql_packages:
+  - mysql-server
+  - python3-pymysql
+mysql_service_name: mysql
+mysql_socket: /var/run/mysqld/mysqld.sock
+mysql_config_path: /etc/mysql/mysql.conf.d/wordpress.cnf

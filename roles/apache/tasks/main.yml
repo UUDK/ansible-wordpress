@@ -1,0 +1,40 @@
+---
+- name: Load OS-specific Apache variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Set Apache log directory
+  ansible.builtin.set_fact:
+    apache_log_dir: "{{ '/var/log/apache2' if ansible_os_family == 'Debian' else '/var/log/httpd' }}"
+
+- name: Install Apache
+  ansible.builtin.package:
+    name: "{{ apache_package_name }}"
+    state: present
+
+- name: Ensure Apache document root exists
+  ansible.builtin.file:
+    path: "{{ apache_vhost_document_root }}"
+    state: directory
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: "0755"
+
+- name: Configure Apache virtual host
+  ansible.builtin.template:
+    src: apache.conf.j2
+    dest: "{{ apache_conf_path }}"
+    mode: "0644"
+  notify: Reload apache
+
+- name: Enable Apache site on Debian family
+  ansible.builtin.command: "{{ apache_enable_site_command }}"
+  args:
+    creates: /etc/apache2/sites-enabled/{{ apache_vhost_name }}.conf
+  when: ansible_os_family == 'Debian'
+  notify: Reload apache
+
+- name: Enable and start Apache
+  ansible.builtin.service:
+    name: "{{ apache_service_name }}"
+    state: started
+    enabled: true

@@ -1,0 +1,73 @@
+---
+- name: Load OS-specific WordPress variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install PHP and archive packages
+  ansible.builtin.package:
+    name: "{{ wordpress_packages }}"
+    state: present
+  notify: Restart web service
+
+- name: Ensure WordPress parent directory exists
+  ansible.builtin.file:
+    path: "{{ wordpress_install_parent }}"
+    state: directory
+    mode: "0755"
+
+- name: Download and unpack WordPress
+  ansible.builtin.unarchive:
+    src: "{{ wordpress_download_url }}"
+    dest: "{{ wordpress_install_parent }}"
+    remote_src: true
+    creates: "{{ wordpress_install_path }}/wp-settings.php"
+
+- name: Configure WordPress
+  ansible.builtin.template:
+    src: wp-config.php.j2
+    dest: "{{ wordpress_install_path }}/wp-config.php"
+    owner: "{{ wordpress_owner }}"
+    group: "{{ wordpress_group }}"
+    mode: "0640"
+
+- name: Set WordPress ownership
+  ansible.builtin.file:
+    path: "{{ wordpress_install_path }}"
+    owner: "{{ wordpress_owner }}"
+    group: "{{ wordpress_group }}"
+    recurse: true
+
+- name: Install WP-CLI
+  ansible.builtin.get_url:
+    url: "{{ wordpress_cli_url }}"
+    dest: "{{ wordpress_cli_path }}"
+    mode: "0755"
+
+- name: Check whether WordPress is installed
+  ansible.builtin.command: "{{ wordpress_cli_path }} core is-installed --path={{ wordpress_install_path }}"
+  become_user: "{{ wordpress_owner }}"
+  register: wordpress_is_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install WordPress site
+  ansible.builtin.command:
+    argv:
+      - "{{ wordpress_cli_path }}"
+      - core
+      - install
+      - "--path={{ wordpress_install_path }}"
+      - "--url={{ wordpress_site_url }}"
+      - "--title={{ wordpress_site_title }}"
+      - "--admin_user={{ wordpress_admin_user }}"
+      - "--admin_password={{ wordpress_admin_password }}"
+      - "--admin_email={{ wordpress_admin_email }}"
+      - --skip-email
+  become_user: "{{ wordpress_owner }}"
+  no_log: true
+  when: wordpress_is_installed.rc != 0
+
+- name: Shuffle WordPress salts
+  ansible.builtin.command: "{{ wordpress_cli_path }} config shuffle-salts --path={{ wordpress_install_path }}"
+  become_user: "{{ wordpress_owner }}"
+  no_log: true
+  when: wordpress_is_installed.rc != 0

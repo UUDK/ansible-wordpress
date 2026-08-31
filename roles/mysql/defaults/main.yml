@@ -1,0 +1,6 @@
+---
+mysql_database_name: wordpress
+mysql_database_user: wordpress
+mysql_database_password: wordpress
+mysql_bind_address: 127.0.0.1
+mysql_database_user_host: "%"

@@ -1,0 +1,19 @@
+---
+- name: Install and configure MySQL or MariaDB
+  hosts: dbservers
+  become: true
+  vars_files:
+    - vars/mysql.yml
+  roles:
+    - mysql
+
+- name: Install Apache and WordPress
+  hosts: webservers
+  become: true
+  vars_files:
+    - vars/apache.yml
+    - vars/mysql.yml
+    - vars/wordpress.yml
+  roles:
+    - apache
+    - wordpress

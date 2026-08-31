@@ -1,0 +1,5 @@
+---
+apache_server_name: "{{ ansible_fqdn | default(inventory_hostname) }}"
+apache_document_root: /var/www/html
+apache_vhost_document_root: "{{ apache_document_root }}/wordpress"
+apache_vhost_name: wordpress

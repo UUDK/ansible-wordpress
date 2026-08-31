@@ -1,0 +1,15 @@
+---
+wordpress_packages:
+  - php
+  - php-cli
+  - php-mysql
+  - php-curl
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-zip
+  - tar
+  - unzip
+wordpress_owner: www-data
+wordpress_group: www-data
+wordpress_web_service_name: apache2

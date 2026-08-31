@@ -1,0 +1,6 @@
+---
+- name: Install and configure MySQL or MariaDB
+  hosts: dbservers
+  become: true
+  roles:
+    - mysql

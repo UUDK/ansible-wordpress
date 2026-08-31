@@ -1,0 +1,7 @@
+---
+apache_package_name: apache2
+apache_service_name: apache2
+apache_user: www-data
+apache_group: www-data
+apache_conf_path: /etc/apache2/sites-available/{{ apache_vhost_name }}.conf
+apache_enable_site_command: a2ensite {{ apache_vhost_name }}.conf

@@ -1,0 +1,16 @@
+---
+wordpress_version: latest
+wordpress_download_url: https://wordpress.org/{{ 'latest' if wordpress_version == 'latest' else 'wordpress-' + wordpress_version }}.tar.gz
+wordpress_install_parent: /var/www/html
+wordpress_install_path: "{{ wordpress_install_parent }}/wordpress"
+wordpress_db_host: localhost
+wordpress_db_name: "{{ mysql_database_name | default('wordpress') }}"
+wordpress_db_user: "{{ mysql_database_user | default('wordpress') }}"
+wordpress_db_password: "{{ mysql_database_password | default('wordpress') }}"
+wordpress_site_url: "http://{{ inventory_hostname }}"
+wordpress_site_title: WordPress
+wordpress_admin_user: admin
+wordpress_admin_password: change-me-now
+wordpress_admin_email: admin@example.com
+wordpress_cli_path: /usr/local/bin/wp
+wordpress_cli_url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
