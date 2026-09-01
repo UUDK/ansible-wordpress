@@ -2,6 +2,12 @@
 - name: Load OS-specific MySQL variables
   ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
+- name: Remove old database server packages
+  ansible.builtin.package:
+    name: "{{ mysql_packages_remove }}"
+    state: absent
+
+
 - name: Install database server packages
   ansible.builtin.package:
     name: "{{ mysql_packages }}"
