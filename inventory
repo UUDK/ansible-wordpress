@@ -1,0 +1,17 @@
+[all:vars]
+ansible_user=super
+
+
+[all]
+web1        ansible_host=192.168.58.102
+db1         ansible_host=192.168.58.101
+web2        ansible_host=192.168.58.107
+db2         ansible_host=192.168.58.108
+
+[webservers]
+web1
+# web2
+
+[dbservers]
+# db1
+db2

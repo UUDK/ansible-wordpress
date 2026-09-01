@@ -1,0 +1,15 @@
+---
+- name: Add inventory hosts to /etc/hosts
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Add each inventory host to /etc/hosts
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        regexp: "^{{ hostvars[item].ansible_host | default(hostvars[item].ansible_default_ipv4.address | default(item)) | regex_escape }}\\s+{{ item | regex_escape }}(\\s|$)"
+        line: "{{ hostvars[item].ansible_host | default(hostvars[item].ansible_default_ipv4.address | default(item)) }} {{ item }}"
+        state: present
+        create: true
+        mode: "0644"
+      loop: "{{ groups['all'] }}"

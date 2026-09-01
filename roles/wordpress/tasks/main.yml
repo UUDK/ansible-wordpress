@@ -43,8 +43,13 @@
     mode: "0755"
 
 - name: Check whether WordPress is installed
-  ansible.builtin.command: "{{ wordpress_cli_path }} core is-installed --path={{ wordpress_install_path }}"
-  become_user: "{{ wordpress_owner }}"
+  ansible.builtin.command:
+    argv:
+      - "{{ wordpress_cli_path }}"
+      - core
+      - is-installed
+      - "--path={{ wordpress_install_path }}"
+      - --allow-root
   register: wordpress_is_installed
   changed_when: false
   failed_when: false
@@ -62,12 +67,6 @@
       - "--admin_password={{ wordpress_admin_password }}"
       - "--admin_email={{ wordpress_admin_email }}"
       - --skip-email
-  become_user: "{{ wordpress_owner }}"
-  no_log: true
-  when: wordpress_is_installed.rc != 0
-
-- name: Shuffle WordPress salts
-  ansible.builtin.command: "{{ wordpress_cli_path }} config shuffle-salts --path={{ wordpress_install_path }}"
-  become_user: "{{ wordpress_owner }}"
+      - --allow-root
   no_log: true
   when: wordpress_is_installed.rc != 0

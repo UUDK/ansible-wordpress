@@ -14,3 +14,11 @@ wordpress_admin_password: change-me-now
 wordpress_admin_email: admin@example.com
 wordpress_cli_path: /usr/local/bin/wp
 wordpress_cli_url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+wordpress_auth_key: change-this-auth-key
+wordpress_secure_auth_key: change-this-secure-auth-key
+wordpress_logged_in_key: change-this-logged-in-key
+wordpress_nonce_key: change-this-nonce-key
+wordpress_auth_salt: change-this-auth-salt
+wordpress_secure_auth_salt: change-this-secure-auth-salt
+wordpress_logged_in_salt: change-this-logged-in-salt
+wordpress_nonce_salt: change-this-nonce-salt

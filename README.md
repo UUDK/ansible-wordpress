@@ -16,6 +16,7 @@ The roles support both Ubuntu and AlmaLinux by loading OS-family-specific variab
 │   ├── install_apache.yml
 │   ├── install_mysql.yml
 │   ├── install_wordpress.yml
+│   ├── update_hosts.yml
 │   └── vars
 │       ├── apache.yml
 │       ├── mysql.yml
@@ -100,6 +101,14 @@ ansible-playbook playbooks/install_wordpress.yml
 
 This playbook installs MySQL/MariaDB on `db2`, then installs Apache and WordPress on `web1`. Deployment-specific variables are set in `playbooks/vars/` so the roles stay reusable.
 
+To add all inventory hosts to `/etc/hosts` on all managed hosts, run:
+
+```bash
+ansible-playbook playbooks/update_hosts.yml
+```
+
+The `/etc/hosts` playbook uses `ansible_host` from inventory when it is set. If `ansible_host` is not set, it falls back to the gathered default IPv4 address, and finally to the inventory hostname.
+
 After the playbook has completed, WordPress is installed and the admin user can log in at:
 
 ```text
@@ -126,6 +135,14 @@ wordpress_site_title: My WordPress Site
 wordpress_admin_user: admin
 wordpress_admin_password: change-me-now
 wordpress_admin_email: admin@example.com
+wordpress_auth_key: replace-with-a-long-random-auth-key
+wordpress_secure_auth_key: replace-with-a-long-random-secure-auth-key
+wordpress_logged_in_key: replace-with-a-long-random-logged-in-key
+wordpress_nonce_key: replace-with-a-long-random-nonce-key
+wordpress_auth_salt: replace-with-a-long-random-auth-salt
+wordpress_secure_auth_salt: replace-with-a-long-random-secure-auth-salt
+wordpress_logged_in_salt: replace-with-a-long-random-logged-in-salt
+wordpress_nonce_salt: replace-with-a-long-random-nonce-salt
 ```
 
-For a real environment, replace passwords and admin email before running the playbook. These variables can also be moved to inventory or `group_vars` if preferred.
+For a real environment, replace passwords, admin email, and WordPress keys/salts before running the playbook. These variables can also be moved to inventory or `group_vars` if preferred.
